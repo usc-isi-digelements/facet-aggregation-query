@@ -1,0 +1,82 @@
+<!--
+Copyright 2017 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../facet-aggregation-query.html">
+  </head>
+
+  <body>
+    <test-fixture id="facet-aggregation-query-fixture">
+      <template>
+        <facet-aggregation-query></facet-aggregation-query>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('facet-aggregation-query tests', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('facet-aggregation-query-fixture');
+          flush(function() {
+            done();
+          });
+        });
+
+        test('template has correct elements', function() {
+          assert.isNotNull(element.$$('query-builder'));
+          assert.isNotNull(element.$$('elastic-client-search'));
+          assert.isNotNull(element.$$('elastic-client-aggregation-builder'));
+          assert.isNotNull(element.$$('json-combine'));
+        });
+
+        test('properties with default values are specified correctly', function() {
+          assert.isFalse(element.matchAll);
+          assert.deepEqual(element._queryBuilderCallback, {dates: element.getFilterDates, terms: element.getFilterTerms});
+        });
+
+        test('getFilterDates returns array of null values if no enabled dates specified in argument', function() {
+          assert.deepEqual(element.getFilterDates({}), [null, null]);
+          assert.deepEqual(element.getFilterDates({dateStart: {enabled: false, date: '2015-10-05T00:00:00'}}), [null, null]);
+          assert.deepEqual(element.getFilterDates({dateEnd: {enabled: false, date: '2016-04-05T00:00:00'}}), [null, null]);
+          assert.deepEqual(element.getFilterDates({dateStart: {enabled: false, date: '2015-10-05T00:00:00'},
+            dateEnd: {enabled: false, date: '2016-04-05T00:00:00'}}), [null, null]);
+        });
+
+        test('getFilterDates returns array with date string values if enabled dates specified in argument', function() {
+          assert.deepEqual(element.getFilterDates({dateStart: {enabled: true, date: '2015-10-05T00:00:00'}}), ['2015-10-05T00:00:00', null]);
+          assert.deepEqual(element.getFilterDates({dateEnd: {enabled: true, date: '2016-04-05T00:00:00'}}), [null, '2016-04-05T00:00:00']);
+          assert.deepEqual(element.getFilterDates({dateStart: {enabled: true, date: '2015-10-05T00:00:00'},
+            dateEnd: {enabled: true, date: '2016-04-05T00:00:00'}}), ['2015-10-05T00:00:00', '2016-04-05T00:00:00']);
+        });
+
+        test('getFilterTerms returns array of enabled terms from argument passed in', function() {
+          assert.deepEqual(element.getFilterTerms({}), []);
+          assert.deepEqual(element.getFilterTerms({term1: {key: 'term1', enabled: true}}), ['term1']);
+          assert.deepEqual(element.getFilterTerms({term1: {key: 'term1', enabled: true}, term2: {key: 'term2', enabled: true}}),
+            ['term1', 'term2']);
+          assert.deepEqual(element.getFilterTerms({term1: {key: 'term1', enabled: true}, term2: {key: 'term2', enabled: false},
+            term3: {key: 'term3', enabled: true}}), ['term1', 'term3']);
+        });
+      });
+    </script>
+  </body>
+</html>

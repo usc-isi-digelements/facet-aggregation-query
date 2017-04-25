@@ -1,0 +1,125 @@
+<!--
+Copyright 2017 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../../elastic-client/elastic-client.html">
+    <link rel="import" href="../facet-aggregation-query.html">
+  </head>
+  <body unresolved>
+    <template is="dom-bind" id="demo">
+      <p>facet-aggregation-query example:</p>
+      <p>Elasticsearch Status: <span>{{myStatus}}</span></p>
+      <p>facet-aggregation-query properties:</p>
+      <ul>
+        <li>Name: 'facetAgg'</li>
+        <li>Query Builder Config: {{stringifyObjectOnChange(queryBuilderConfig.*)}}</li>
+        <li>Search Parameters: {{stringifyObjectOnChange(searchParameters.*)}}</li>
+        <li>Index: 'mockads'</li>
+        <li>Index Types: ["ad"]</li>
+        <li>Last Error: <span>[[stringifyObjectOnChange(error.*)]]</span></li>
+        <li>Loading: <span>[[loading]]</span></li>
+        <li>Process Request: <span>[[processRequest]]</span></li>
+        <li>Match All: false</li>
+        <li>Field: 'city'</li>
+        <li>Combine Function: combineFunction = function(data, property) { // see source code };</li>
+        <li>Result List:
+          <ol>
+            <template is="dom-repeat" items="{{resultList}}" as="result">
+              <li>{{stringifyObjectOnChange(result.*)}}</li>
+            </template>
+          </ol>
+        </li>
+      </ul>
+
+      <elastic-client
+        config='{"host": "http://localhost:9200"}'
+        client="{{esclient}}"
+        cluster-status="{{myStatus}}">
+      </elastic-client>
+
+      <facet-aggregation-query
+        name="facetAgg"
+        query-builder-config="[[queryBuilderConfig]]"
+        search-parameters="[[searchParameters]]"
+        client="[[esclient]]"
+        index="mockads"
+        index-types='["ad"]'
+        last-error="{{error}}"
+        loading="{{loading}}"
+        process-request="{{processRequest}}"
+        field="city"
+        count="10"
+        combine-function="[[combineFunction]]"
+        result-list="{{resultList}}">
+      </facet-aggregation-query>
+    </template>
+    <script>
+      (function(document) {
+        var demo = document.querySelector('#demo');
+
+        demo.processRequest = false;
+
+        demo.queryBuilderConfig = {
+          state: {
+            field: 'state'
+          },
+          city: {
+            field: 'city'
+          }
+        };
+
+        demo.searchParameters = {
+          state: {
+            'NY': {
+              category: 'State',
+              enabled: true,
+              key: 'NY',
+              text: 'NY'
+            }
+          }
+        };
+
+        demo.combineFunction = function(data, property) {
+          console.log(data);
+          if(data && data.aggregations && data.aggregations[property] &&
+            data.aggregations[property][property] && data.aggregations[property][property].buckets) {
+            return data.aggregations[property][property].buckets.map(function(bucket) {
+              var id = ('' + bucket.key).toLowerCase();
+              /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
+              return {
+                count: bucket.doc_count,
+                id: id
+              };
+              /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
+            });
+          }
+          return [];
+        };
+
+        // now that all properties are ready, set processRequest to true
+        demo.processRequest = true;
+
+        demo.stringifyObjectOnChange = function(object) {
+          return JSON.stringify(object.value);
+        };
+      })(document);
+    </script>
+  </body>
+</html>
