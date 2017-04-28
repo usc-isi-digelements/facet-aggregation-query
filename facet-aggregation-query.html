@@ -119,7 +119,9 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * The query builder config.
+         * Query config object to pass to the query-builder. Consists of unique keys from the searchParameter object
+         * mapped to config objects containing {String} field and (Optional) {String} type.  Default type
+         * is "string".  Supported types are "string", "date"
          *
          * @type {Object}
          */

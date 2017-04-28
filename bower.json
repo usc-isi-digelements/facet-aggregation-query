@@ -1,7 +1,7 @@
 {
   "name": "facet-aggregation-query",
   "description": "A Polymer Element that performs an elasticsearch aggregation query, with the results in a format ready to use as a set of facets.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
