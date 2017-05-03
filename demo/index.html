@@ -97,7 +97,6 @@ limitations under the License.
         };
 
         demo.combineFunction = function(data, property) {
-          console.log(data);
           if(data && data.aggregations && data.aggregations[property] &&
             data.aggregations[property][property] && data.aggregations[property][property].buckets) {
             return data.aggregations[property][property].buckets.map(function(bucket) {

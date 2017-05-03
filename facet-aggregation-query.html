@@ -27,21 +27,21 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
 
 ### Example
 ```html
-    <facet-aggregation-query
-      name="facetAgg"
-      query-builder-config="[[queryBuilderConfig]]"
-      search-parameters="[[searchParameters]]"
-      client="[[esclient]]"
-      index="mockads"
-      index-types='["ad"]'
-      last-error="{{error}}"
-      loading="{{loading}}"
-      process-request="{{processRequest}}"
-      field="city"
-      count="10"
-      combine-function="[[combineFunction]]"
-      result-list="{{resultList}}">
-    </facet-aggregation-query>
+  <facet-aggregation-query
+    name="facetAgg"
+    query-builder-config="[[queryBuilderConfig]]"
+    search-parameters="[[searchParameters]]"
+    client="[[esclient]]"
+    index="mockads"
+    index-types='["ad"]'
+    last-error="{{error}}"
+    loading="{{loading}}"
+    process-request="{{processRequest}}"
+    field="city"
+    count="10"
+    combine-function="[[combineFunction]]"
+    result-list="{{resultList}}">
+  </facet-aggregation-query>
 ```
 
 @demo demo/index.html
