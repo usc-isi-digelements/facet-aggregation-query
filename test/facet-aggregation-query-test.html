@@ -86,6 +86,7 @@ limitations under the License.
 
         setup(function(done) {
           element = fixture('facet-aggregation-query-fixture');
+          element.name = 'name';
           element.queryUrl = 'url';
           element.processRequest = true;
           element.resultFunction = function() {
@@ -102,7 +103,7 @@ limitations under the License.
 
         test('does have query-transformer', function() {
           assert.isNotNull(element.$$('query-transformer'));
-          assert.equal(element.$$('query-transformer').getAttribute('page-size'), 0);
+          assert.equal(element.$$('query-transformer').aggregationType, 'name');
           assert.equal(element.$$('query-transformer').url, 'url');
           assert.deepEqual(element.$$('query-transformer').resultFunction, element.resultFunction);
           assert.deepEqual(element.$$('query-transformer').searchFunction, element.searchFunction);
@@ -110,6 +111,7 @@ limitations under the License.
             key: 'value'
           });
           assert.isTrue(element.$$('query-transformer').processRequest);
+          assert.equal(element.$$('query-transformer').getAttribute('page-size'), 0);
         });
 
         test('does not have elasticsearch elements', function() {

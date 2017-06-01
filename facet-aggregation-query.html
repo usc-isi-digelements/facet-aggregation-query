@@ -48,6 +48,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
 ### Example that runs an ajax query
 ```html
   <facet-aggregation-query
+    name="[[dataType]]"
     query-url="[[url]]"
     process-request="[[processRequest]]"
     result-function="[[resultFunction]]"
@@ -72,6 +73,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
 
     <template is="dom-if" if="[[queryUrl]]">
       <query-transformer
+        aggregation-type="[[name]]"
         page-size="0"
         process-request="[[processRequest]]"
         result-function="[[resultFunction]]"
@@ -140,9 +142,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * Name to use for elasticsearch aggregation. Also used for the ignoreType in `<query-builder>`.
-         *
-         * Not used if `queryUrl` and `searchFunction` are set.
+         * Name to use for the elasticsearch aggregation, the ignoreType in `query-builder`, and the aggregationType in `query-transformer`.
          *
          * @type {String}
          */
