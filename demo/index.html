@@ -33,12 +33,12 @@ limitations under the License.
         <li>Search Parameters: {{stringifyObjectOnChange(searchParameters.*)}}</li>
         <li>Index: 'mockads'</li>
         <li>Index Types: ["ad"]</li>
-        <li>Last Error: <span>[[stringifyObjectOnChange(error.*)]]</span></li>
+        <li>Error: <span>[[stringifyObjectOnChange(error.*)]]</span></li>
         <li>Loading: <span>[[loading]]</span></li>
         <li>Process Request: <span>[[processRequest]]</span></li>
         <li>Match All: false</li>
         <li>Field: 'city'</li>
-        <li>Combine Function: combineFunction = function(data, property) { // see source code };</li>
+        <li>Result Function: resultFunction = function(data, property) { // see source code };</li>
         <li>Result List:
           <ol>
             <template is="dom-repeat" items="{{resultList}}" as="result">
@@ -61,12 +61,12 @@ limitations under the License.
         client="[[esclient]]"
         index="mockads"
         index-types='["ad"]'
-        last-error="{{error}}"
+        error="{{error}}"
         loading="{{loading}}"
         process-request="{{processRequest}}"
         field="city"
         count="10"
-        combine-function="[[combineFunction]]"
+        result-function="[[resultFunction]]"
         result-list="{{resultList}}">
       </facet-aggregation-query>
     </template>
@@ -96,7 +96,7 @@ limitations under the License.
           }
         };
 
-        demo.combineFunction = function(data, property) {
+        demo.resultFunction = function(data, property) {
           if(data && data.aggregations && data.aggregations[property] &&
             data.aggregations[property][property] && data.aggregations[property][property].buckets) {
             return data.aggregations[property][property].buckets.map(function(bucket) {

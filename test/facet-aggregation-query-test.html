@@ -31,14 +31,13 @@ limitations under the License.
     </test-fixture>
 
     <script>
-      suite('facet-aggregation-query tests', function() {
+      suite('facet-aggregation-query elasticsearch tests', function() {
         var element;
 
         setup(function(done) {
           element = fixture('facet-aggregation-query-fixture');
-          flush(function() {
-            done();
-          });
+          element.client = {};
+          flush(done);
         });
 
         test('template has correct elements', function() {
@@ -46,6 +45,10 @@ limitations under the License.
           assert.isNotNull(element.$$('elastic-client-search'));
           assert.isNotNull(element.$$('elastic-client-aggregation-builder'));
           assert.isNotNull(element.$$('json-combine'));
+        });
+
+        test('does not have query-transformer', function() {
+          assert.isNull(element.$$('query-transformer'));
         });
 
         test('properties with default values are specified correctly', function() {
@@ -75,6 +78,45 @@ limitations under the License.
             ['term1', 'term2']);
           assert.deepEqual(element.getFilterTerms({term1: {key: 'term1', enabled: true}, term2: {key: 'term2', enabled: false},
             term3: {key: 'term3', enabled: true}}), ['term1', 'term3']);
+        });
+      });
+
+      suite('facet-aggregation-query transformer tests', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('facet-aggregation-query-fixture');
+          element.queryUrl = 'url';
+          element.processRequest = true;
+          element.resultFunction = function() {
+            return [];
+          };
+          element.searchFunction = function() {
+            return {};
+          };
+          element.searchParameters = {
+            key: 'value'
+          };
+          flush(done);
+        });
+
+        test('does have query-transformer', function() {
+          assert.isNotNull(element.$$('query-transformer'));
+          assert.equal(element.$$('query-transformer').getAttribute('page-size'), 0);
+          assert.equal(element.$$('query-transformer').url, 'url');
+          assert.deepEqual(element.$$('query-transformer').resultFunction, element.resultFunction);
+          assert.deepEqual(element.$$('query-transformer').searchFunction, element.searchFunction);
+          assert.deepEqual(element.$$('query-transformer').searchParameters, {
+            key: 'value'
+          });
+          assert.isTrue(element.$$('query-transformer').processRequest);
+        });
+
+        test('does not have elasticsearch elements', function() {
+          assert.isNull(element.$$('query-builder'));
+          assert.isNull(element.$$('elastic-client-search'));
+          assert.isNull(element.$$('elastic-client-aggregation-builder'));
+          assert.isNull(element.$$('json-combine'));
         });
       });
     </script>

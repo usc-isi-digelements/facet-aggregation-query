@@ -1,8 +1,8 @@
 # facet-aggregation-query
 
-A Polymer Element that performs an elasticsearch aggregation query, with the results in a format ready to use as a set of facets (for an example, see `<facet-list>`).
+A Polymer Element that performs an ajax query or elasticsearch aggregation query and returns results in a format ready to use as a set of facets (for an example, see `<facet-list>`).
 
-### Example
+### Example that runs an elasticsearch aggregation query
 ```html
   <facet-aggregation-query
     name="facetAgg"
@@ -11,12 +11,26 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
     client="[[esclient]]"
     index="mockads"
     index-types='["ad"]'
-    last-error="{{error}}"
+    error="{{error}}"
     loading="{{loading}}"
-    process-request="{{processRequest}}"
+    process-request="[[processRequest]]"
     field="city"
     count="10"
-    combine-function="[[combineFunction]]"
+    result-function="[[resultFunction]]"
+    result-list="{{resultList}}">
+  </facet-aggregation-query>
+```
+
+### Example that runs an ajax query
+```html
+  <facet-aggregation-query
+    query-url="[[url]]"
+    process-request="[[processRequest]]"
+    result-function="[[resultFunction]]"
+    search-function="[[searchFunction]]"
+    search-parameters="[[searchParameters]]"
+    error="{{error}}"
+    loading="{{loading}}"
     result-list="{{resultList}}">
   </facet-aggregation-query>
 ```

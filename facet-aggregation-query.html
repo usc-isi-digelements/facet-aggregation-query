@@ -23,9 +23,9 @@ limitations under the License.
 <link rel="import" href="../lodash-import/lodash.html">
 
 <!--
-A Polymer Element that performs an elasticsearch aggregation query, with the results in a format ready to use as a set of facets (for an example, see `<facet-list>`).
+A Polymer Element that performs an ajax query or elasticsearch aggregation query and returns results in a format ready to use as a set of facets (for an example, see `<facet-list>`).
 
-### Example
+### Example that runs an elasticsearch aggregation query
 ```html
   <facet-aggregation-query
     name="facetAgg"
@@ -34,12 +34,26 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
     client="[[esclient]]"
     index="mockads"
     index-types='["ad"]'
-    last-error="{{error}}"
+    error="{{error}}"
     loading="{{loading}}"
-    process-request="{{processRequest}}"
+    process-request="[[processRequest]]"
     field="city"
     count="10"
-    combine-function="[[combineFunction]]"
+    result-function="[[resultFunction]]"
+    result-list="{{resultList}}">
+  </facet-aggregation-query>
+```
+
+### Example that runs an ajax query
+```html
+  <facet-aggregation-query
+    query-url="[[url]]"
+    process-request="[[processRequest]]"
+    result-function="[[resultFunction]]"
+    search-function="[[searchFunction]]"
+    search-parameters="[[searchParameters]]"
+    error="{{error}}"
+    loading="{{loading}}"
     result-list="{{resultList}}">
   </facet-aggregation-query>
 ```
@@ -55,43 +69,59 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
       }
     </style>
 
-    <query-builder
-      callback="[[_queryBuilderCallback]]"
-      config="[[queryBuilderConfig]]"
-      data="[[searchParameters]]"
-      query="{{_query}}"
-      match-all="{{matchAll}}">
-    </query-builder>
+    <template is="dom-if" if="[[queryUrl]]">
+      <query-transformer
+        page-size="0"
+        process-request="[[processRequest]]"
+        result-function="[[resultFunction]]"
+        search-function="[[searchFunction]]"
+        search-parameters="[[searchParameters]]"
+        url="[[queryUrl]]"
+        error="{{error}}"
+        loading="{{loading}}"
+        results="{{resultList}}">
+      </query-transformer>
+    </template>
 
-    <elastic-client-search
-      client="[[client]]"
-      index="[[index]]"
-      elastic-types="[[indexTypes]]"
-      query="[[_query]]"
-      page-size="0"
-      results="{{_queryResults}}"
-      last-error="{{lastError}}"
-      aggregations="{{buildArray(_aggregation)}}"
-      filters="[]"
-      loading="{{loading}}"
-      properties-ready="{{processRequest}}">
-    </elastic-client-search>
+    <template is="dom-if" if="[[client]]">
+      <query-builder
+        callback="[[_queryBuilderCallback]]"
+        config="[[queryBuilderConfig]]"
+        data="[[searchParameters]]"
+        query="{{_query}}"
+        match-all="{{matchAll}}">
+      </query-builder>
 
-    <elastic-client-aggregation-builder
-      name="[[name]]"
-      field="[[field]]"
-      count="{{count}}"
-      ejs-aggregation="{{_aggregation}}"
-      type="terms"
-      order="{{sortOrder}}">
-    </elastic-client-aggregation-builder>
+      <elastic-client-search
+        client="[[client]]"
+        index="[[index]]"
+        elastic-types="[[indexTypes]]"
+        query="[[_query]]"
+        page-size="0"
+        results="{{_queryResults}}"
+        last-error="{{error}}"
+        aggregations="{{buildArray(_aggregation)}}"
+        filters="[]"
+        loading="{{loading}}"
+        properties-ready="{{processRequest}}">
+      </elastic-client-search>
 
-    <json-combine
-      data-in1="[[_queryResults]]"
-      data-in2="[[name]]"
-      data-out="{{resultList}}"
-      combine-function="[[combineFunction]]">
-    </json-combine>
+      <elastic-client-aggregation-builder
+        name="[[name]]"
+        field="[[field]]"
+        count="{{count}}"
+        ejs-aggregation="{{_aggregation}}"
+        type="terms"
+        order="{{sortOrder}}">
+      </elastic-client-aggregation-builder>
+
+      <json-combine
+        data-in1="[[_queryResults]]"
+        data-in2="[[name]]"
+        data-out="{{resultList}}"
+        combine-function="[[resultFunction]]">
+      </json-combine>
+    </template>
   </template>
   <script>
   (function() {
@@ -110,6 +140,8 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
          *
          * Name to use for elasticsearch aggregation. Also used for the ignoreType in `<query-builder>`.
          *
+         * Optional if `queryUrl` and `searchFunction` are set.
+         *
          * @type {String}
          */
         name: {
@@ -120,8 +152,11 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
          * (Required)
          *
          * Query config object to pass to the query-builder. Consists of unique keys from the searchParameter object
-         * mapped to config objects containing {String} field and (Optional) {String} type.  Default type
-         * is "string".  Supported types are "string", "date"
+         * mapped to config objects containing {String} field and (Optional) {String} type.
+         *
+         * Default type is "string".  Supported types are "string", "date"
+         *
+         * Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {Object}
          */
@@ -143,7 +178,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * The elasticsearch client.
+         * The elasticsearch client.  Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {Object}
          */
@@ -154,7 +189,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * The elasticsearch index to query.
+         * The elasticsearch index to query.  Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {String}
          */
@@ -165,7 +200,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * The elasticsearch index types to query.
+         * The elasticsearch index types to query.  Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {Array}
          */
@@ -199,7 +234,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * Field to aggregate on.
+         * Field to aggregate on.  Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {String}
          */
@@ -210,7 +245,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         /**
          * (Required)
          *
-         * Count to use for aggregation builder.
+         * Count to use for aggregation builder.  Optional if `queryUrl` and `searchFunction` are set.
          *
          * @type {Number}
          */
@@ -250,7 +285,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
          *
          * @type {Object}
          */
-        combineFunction: {
+        resultFunction: {
           type: Object
         },
 
@@ -261,7 +296,7 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
          *
          * @type {Object}
          */
-        lastError: {
+        error: {
           type: Object,
           notify: true
         },
@@ -276,6 +311,28 @@ A Polymer Element that performs an elasticsearch aggregation query, with the res
         matchAll: {
           type: Boolean,
           value: false
+        },
+
+        /**
+         * (Optional)
+         *
+         * The query URL for the `query-transformer` if it is to be used rather than the `elastic-client-search`.
+         *
+         * @type {String}
+         */
+        queryUrl: {
+          type: String
+        },
+
+        /**
+         * (Optional)
+         *
+         * The search function for the `query-transformer` if it is to be used rather than the `elastic-client-search`.
+         *
+         * @type {Object}
+         */
+        searchFunction: {
+          type: Object
         },
 
         /**
