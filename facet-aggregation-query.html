@@ -142,7 +142,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
          *
          * Name to use for elasticsearch aggregation. Also used for the ignoreType in `<query-builder>`.
          *
-         * Optional if `queryUrl` and `searchFunction` are set.
+         * Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {String}
          */
@@ -158,7 +158,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
          *
          * Default type is "string".  Supported types are "string", "date"
          *
-         * Optional if `queryUrl` and `searchFunction` are set.
+         * Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {Object}
          */
@@ -180,7 +180,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * The elasticsearch client.  Optional if `queryUrl` and `searchFunction` are set.
+         * The elasticsearch client.  Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {Object}
          */
@@ -191,7 +191,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * The elasticsearch index to query.  Optional if `queryUrl` and `searchFunction` are set.
+         * The elasticsearch index to query.  Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {String}
          */
@@ -202,7 +202,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * The elasticsearch index types to query.  Optional if `queryUrl` and `searchFunction` are set.
+         * The elasticsearch index types to query.  Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {Array}
          */
@@ -236,7 +236,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * Field to aggregate on.  Optional if `queryUrl` and `searchFunction` are set.
+         * Field to aggregate on.  Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {String}
          */
@@ -247,7 +247,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * Count to use for aggregation builder.  Optional if `queryUrl` and `searchFunction` are set.
+         * Count to use for aggregation builder.  Not used if `queryUrl` and `searchFunction` are set.
          *
          * @type {Number}
          */
