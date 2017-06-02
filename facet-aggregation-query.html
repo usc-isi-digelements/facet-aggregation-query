@@ -74,10 +74,13 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
     <template is="dom-if" if="[[queryUrl]]">
       <query-transformer
         aggregation-type="[[name]]"
+        default-results="[]"
         page-size="0"
         process-request="[[processRequest]]"
+        result-config="[[name]]"
         result-function="[[resultFunction]]"
         search-function="[[searchFunction]]"
+        search-on-empty-params="[[matchAll]]"
         search-parameters="[[searchParameters]]"
         sort-order="[[sortOrder]]"
         url="[[queryUrl]]"
@@ -93,7 +96,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         config="[[queryBuilderConfig]]"
         data="[[searchParameters]]"
         query="{{_query}}"
-        match-all="{{matchAll}}">
+        match-all="[[matchAll]]">
       </query-builder>
 
       <elastic-client-search

@@ -104,7 +104,9 @@ limitations under the License.
         test('does have query-transformer', function() {
           assert.isNotNull(element.$$('query-transformer'));
           assert.equal(element.$$('query-transformer').aggregationType, 'name');
+          assert.equal(element.$$('query-transformer').resultConfig, 'name');
           assert.equal(element.$$('query-transformer').url, 'url');
+          assert.deepEqual(element.$$('query-transformer').defaultResults, []);
           assert.deepEqual(element.$$('query-transformer').resultFunction, element.resultFunction);
           assert.deepEqual(element.$$('query-transformer').searchFunction, element.searchFunction);
           assert.deepEqual(element.$$('query-transformer').searchParameters, {
