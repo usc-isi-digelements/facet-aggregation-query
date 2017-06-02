@@ -33,7 +33,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
     query-builder-config="[[queryBuilderConfig]]"
     search-parameters="[[searchParameters]]"
     client="[[esclient]]"
-    index="mockads"
+    index-name="mockads"
     index-types='["ad"]'
     error="{{error}}"
     loading="{{loading}}"
@@ -75,7 +75,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
       <query-transformer
         aggregation-type="[[name]]"
         default-results="[]"
-        page-size="0"
+        page-size="[[count]]"
         process-request="[[processRequest]]"
         result-config="[[name]]"
         result-function="[[resultFunction]]"
@@ -101,7 +101,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
 
       <elastic-client-search
         client="[[client]]"
-        index="[[index]]"
+        index="[[indexName]]"
         elastic-types="[[indexTypes]]"
         query="[[_query]]"
         page-size="0"
@@ -198,7 +198,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
          *
          * @type {String}
          */
-        index: {
+        indexName: {
           type: String
         },
 
@@ -250,7 +250,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Required)
          *
-         * Count to use for aggregation builder.  Not used if `queryUrl` and `searchFunction` are set.
+         * Count to use for the ajax or elasticsearch query.
          *
          * @type {Number}
          */
