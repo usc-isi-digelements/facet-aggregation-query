@@ -77,7 +77,6 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         default-results="[]"
         page-size="[[count]]"
         process-request="[[processRequest]]"
-        result-config="[[name]]"
         result-function="[[resultFunction]]"
         search-function="[[searchFunction]]"
         search-on-empty-params="[[matchAll]]"
@@ -86,7 +85,10 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         url="[[queryUrl]]"
         error="{{error}}"
         loading="{{loading}}"
-        results="{{resultList}}">
+        results="{{resultList}}"
+        result-config="{{_resultConfig}}"
+        network-expansion-parameters="[[networkExpansionParameters]]"
+        is-network-expansion-request="{{_isNetworkExpansionRequest}}">
       </query-transformer>
     </template>
 
@@ -341,6 +343,34 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         },
 
         /**
+         * (Required)
+         *
+         * Network expansion parameters for the query (if any).
+         *
+         * @type {Object}
+         * @default {}
+         */
+        networkExpansionParameters: {
+          type: Object,
+          value: function() {
+            return {};
+          }
+        },
+
+        /**
+         * Whether or not query is a network expansion query.
+         *
+         * @type {Boolean}
+         * @default false
+         * @private
+         */
+        _isNetworkExpansionRequest: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
          * The elasticjs query created by this component.
          *
          * @type {Object}
@@ -386,6 +416,18 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
               terms: this.getFilterTerms
             };
           }
+        },
+
+        /**
+         * The result config object to pass along to the query-transformer.
+         *
+         * @type {Object}
+         * @private
+         */
+        _resultConfig: {
+          type: Object,
+          computed: '_createResultConfig(name, _isNetworkExpansionRequest)',
+          notify: true
         }
       },
 
@@ -414,8 +456,18 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         }).map(function(key) {
           return key;
         });
-      }
+      },
 
+      /**
+       * Returns result config object for the query-transformer
+       *
+       * @param {String} name
+       * @param {Boolean} _isNetworkExpansionRequest
+       * @return {Object}
+       */
+      _createResultConfig: function(name, _isNetworkExpansionRequest) {
+        return {networkExpansionQuery: _isNetworkExpansionRequest, name: name};
+      }
     });
   })();
   </script>

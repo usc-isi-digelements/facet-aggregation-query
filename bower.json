@@ -22,7 +22,7 @@
     "elastic-client-aggregation-builder": "DigElements/elastic-client-aggregation-builder#1.0.9",
     "json-combine": "DigElements/json-combine#1.0.1",
     "query-builder": "DigElements/query-builder#1.0.1",
-    "query-transformer": "DigElements/query-transformer#1.0.9",
+    "query-transformer": "DigElements/query-transformer#DIG-1177",
     "lodash-import": "DigElements/lodash-import#~1.0.1"
   },
   "devDependencies": {
