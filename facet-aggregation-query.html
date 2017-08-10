@@ -77,7 +77,9 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         default-results="[]"
         page-size="[[count]]"
         process-request="[[processRequest]]"
+        result-config="[[resultConfig]]"
         result-function="[[resultFunction]]"
+        search-config="[[searchConfig]]"
         search-function="[[searchFunction]]"
         search-on-empty-params="[[matchAll]]"
         search-parameters="[[searchParameters]]"
@@ -85,10 +87,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         url="[[queryUrl]]"
         error="{{error}}"
         loading="{{loading}}"
-        results="{{resultList}}"
-        result-config="{{_resultConfig}}"
-        network-expansion-parameters="[[networkExpansionParameters]]"
-        is-network-expansion-request="{{_isNetworkExpansionRequest}}">
+        results="{{resultList}}">
       </query-transformer>
     </template>
 
@@ -286,6 +285,17 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         },
 
         /**
+         * (Optional)
+         *
+         * The result config object to pass along to the query-transformer.
+         *
+         * @type {Object}
+         */
+        resultConfig: {
+          type: Object
+        },
+
+        /**
          * (Required)
          *
          * Function used to create final resultList.
@@ -334,40 +344,23 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         /**
          * (Optional)
          *
+         * The search config object to pass along to the query-transformer.
+         *
+         * @type {Object}
+         */
+        searchConfig: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
          * The search function for the `query-transformer` if it is to be used rather than the `elastic-client-search`.
          *
          * @type {Object}
          */
         searchFunction: {
           type: Object
-        },
-
-        /**
-         * (Required)
-         *
-         * Network expansion parameters for the query (if any).
-         *
-         * @type {Object}
-         * @default {}
-         */
-        networkExpansionParameters: {
-          type: Object,
-          value: function() {
-            return {};
-          }
-        },
-
-        /**
-         * Whether or not query is a network expansion query.
-         *
-         * @type {Boolean}
-         * @default false
-         * @private
-         */
-        _isNetworkExpansionRequest: {
-          type: Boolean,
-          value: false,
-          notify: true
         },
 
         /**
@@ -416,18 +409,6 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
               terms: this.getFilterTerms
             };
           }
-        },
-
-        /**
-         * The result config object to pass along to the query-transformer.
-         *
-         * @type {Object}
-         * @private
-         */
-        _resultConfig: {
-          type: Object,
-          computed: '_createResultConfig(name, _isNetworkExpansionRequest)',
-          notify: true
         }
       },
 
@@ -456,17 +437,6 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         }).map(function(key) {
           return key;
         });
-      },
-
-      /**
-       * Returns result config object for the query-transformer
-       *
-       * @param {String} name
-       * @param {Boolean} _isNetworkExpansionRequest
-       * @return {Object}
-       */
-      _createResultConfig: function(name, _isNetworkExpansionRequest) {
-        return {networkExpansionQuery: _isNetworkExpansionRequest, name: name};
       }
     });
   })();

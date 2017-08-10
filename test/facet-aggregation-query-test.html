@@ -106,7 +106,7 @@ limitations under the License.
           assert.isNotNull(element.$$('query-transformer'));
           assert.equal(element.$$('query-transformer').aggregationType, 'name');
           assert.equal(element.$$('query-transformer').pageSize, 50);
-          assert.deepEqual(element.$$('query-transformer').resultConfig, {networkExpansionQuery: false, name: 'name'});
+          assert.deepEqual(element.$$('query-transformer').resultConfig, {});
           assert.equal(element.$$('query-transformer').url, 'url');
           assert.deepEqual(element.$$('query-transformer').defaultResults, []);
           assert.deepEqual(element.$$('query-transformer').resultFunction, element.resultFunction);
