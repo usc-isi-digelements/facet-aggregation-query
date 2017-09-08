@@ -18,107 +18,109 @@ limitations under the License.
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
     <link rel="import" href="../../elastic-client/elastic-client.html">
     <link rel="import" href="../facet-aggregation-query.html">
   </head>
   <body unresolved>
-    <template is="dom-bind" id="demo">
-      <p>facet-aggregation-query example:</p>
-      <p>Elasticsearch Status: <span>{{myStatus}}</span></p>
-      <p>facet-aggregation-query properties:</p>
-      <ul>
-        <li>Name: 'facetAgg'</li>
-        <li>Query Builder Config: {{stringifyObjectOnChange(queryBuilderConfig.*)}}</li>
-        <li>Search Parameters: {{stringifyObjectOnChange(searchParameters.*)}}</li>
-        <li>Index Name: 'mockads'</li>
-        <li>Index Types: ["ad"]</li>
-        <li>Error: <span>[[stringifyObjectOnChange(error.*)]]</span></li>
-        <li>Loading: <span>[[loading]]</span></li>
-        <li>Process Request: <span>[[processRequest]]</span></li>
-        <li>Match All: false</li>
-        <li>Field: 'city'</li>
-        <li>Result Function: resultFunction = function(data, property) { // see source code };</li>
-        <li>Result List:
-          <ol>
-            <template is="dom-repeat" items="{{resultList}}" as="result">
-              <li>{{stringifyObjectOnChange(result.*)}}</li>
-            </template>
-          </ol>
-        </li>
-      </ul>
+    <dom-bind>
+      <script>
+        (function(document) {
+          var domBind = document.querySelector('dom-bind');
 
-      <elastic-client
-        config='{"host": "http://localhost:9200"}'
-        client="{{esclient}}"
-        cluster-status="{{myStatus}}">
-      </elastic-client>
+          domBind.processRequest = false;
 
-      <facet-aggregation-query
-        name="facetAgg"
-        query-builder-config="[[queryBuilderConfig]]"
-        search-parameters="[[searchParameters]]"
-        client="[[esclient]]"
-        index-name="mockads"
-        index-types='["ad"]'
-        error="{{error}}"
-        loading="{{loading}}"
-        process-request="{{processRequest}}"
-        field="city"
-        count="10"
-        result-function="[[resultFunction]]"
-        result-list="{{resultList}}">
-      </facet-aggregation-query>
-    </template>
-    <script>
-      (function(document) {
-        var demo = document.querySelector('#demo');
-
-        demo.processRequest = false;
-
-        demo.queryBuilderConfig = {
-          state: {
-            field: 'state'
-          },
-          city: {
-            field: 'city'
-          }
-        };
-
-        demo.searchParameters = {
-          state: {
-            'NY': {
-              category: 'State',
-              enabled: true,
-              key: 'NY',
-              text: 'NY'
+          domBind.queryBuilderConfig = {
+            state: {
+              field: 'state'
+            },
+            city: {
+              field: 'city'
             }
-          }
-        };
+          };
 
-        demo.resultFunction = function(data, property) {
-          if(data && data.aggregations && data.aggregations[property] &&
-            data.aggregations[property][property] && data.aggregations[property][property].buckets) {
-            return data.aggregations[property][property].buckets.map(function(bucket) {
-              var id = ('' + bucket.key).toLowerCase();
-              /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
-              return {
-                count: bucket.doc_count,
-                id: id
-              };
-              /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
-            });
-          }
-          return [];
-        };
+          domBind.searchParameters = {
+            state: {
+              'NY': {
+                category: 'State',
+                enabled: true,
+                key: 'NY',
+                text: 'NY'
+              }
+            }
+          };
 
-        // now that all properties are ready, set processRequest to true
-        demo.processRequest = true;
+          domBind.resultFunction = function(data, property) {
+            if(data && data.aggregations && data.aggregations[property] &&
+              data.aggregations[property][property] && data.aggregations[property][property].buckets) {
+              return data.aggregations[property][property].buckets.map(function(bucket) {
+                var id = ('' + bucket.key).toLowerCase();
+                /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
+                return {
+                  count: bucket.doc_count,
+                  id: id
+                };
+                /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
+              });
+            }
+            return [];
+          };
 
-        demo.stringifyObjectOnChange = function(object) {
-          return JSON.stringify(object.value);
-        };
-      })(document);
-    </script>
+          // now that all properties are ready, set processRequest to true
+          domBind.processRequest = true;
+
+          domBind.stringifyObjectOnChange = function(object) {
+            return JSON.stringify(object.value);
+          };
+        })(document);
+      </script>
+      <template is="dom-bind" id="demo">
+        <p>facet-aggregation-query example:</p>
+        <p>Elasticsearch Status: <span>{{myStatus}}</span></p>
+        <p>facet-aggregation-query properties:</p>
+        <ul>
+          <li>Name: 'facetAgg'</li>
+          <li>Query Builder Config: {{stringifyObjectOnChange(queryBuilderConfig.*)}}</li>
+          <li>Search Parameters: {{stringifyObjectOnChange(searchParameters.*)}}</li>
+          <li>Index Name: 'mockads'</li>
+          <li>Index Types: ["ad"]</li>
+          <li>Error: <span>[[stringifyObjectOnChange(error.*)]]</span></li>
+          <li>Loading: <span>[[loading]]</span></li>
+          <li>Process Request: <span>[[processRequest]]</span></li>
+          <li>Match All: false</li>
+          <li>Field: 'city'</li>
+          <li>Result Function: resultFunction = function(data, property) { // see source code };</li>
+          <li>Result List:
+            <ol>
+              <template is="dom-repeat" items="{{resultList}}" as="result">
+                <li>{{stringifyObjectOnChange(result.*)}}</li>
+              </template>
+            </ol>
+          </li>
+        </ul>
+
+        <elastic-client
+          config='{"host": "http://localhost:9200"}'
+          client="{{esclient}}"
+          cluster-status="{{myStatus}}">
+        </elastic-client>
+
+        <facet-aggregation-query
+          name="facetAgg"
+          query-builder-config="[[queryBuilderConfig]]"
+          search-parameters="[[searchParameters]]"
+          client="[[esclient]]"
+          index-name="mockads"
+          index-types='["ad"]'
+          error="{{error}}"
+          loading="{{loading}}"
+          process-request="{{processRequest}}"
+          field="city"
+          count="10"
+          result-function="[[resultFunction]]"
+          result-list="{{resultList}}">
+        </facet-aggregation-query>
+      </template>
+    </dom-bind>
   </body>
 </html>

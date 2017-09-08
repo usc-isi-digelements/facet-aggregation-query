@@ -1,7 +1,7 @@
 {
   "name": "facet-aggregation-query",
   "description": "A Polymer Element that performs an ajax query or elasticsearch aggregation query and returns results in a format ready to use as a set of facets.",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -16,19 +16,19 @@
     "/test/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.7.0",
+    "polymer": "Polymer/polymer#^2.0.2",
     "array-behavior": "DigElements/array-behavior#1.0.2",
-    "elastic-client-search": "DigElements/elastic-client-search#1.0.22",
-    "elastic-client-aggregation-builder": "DigElements/elastic-client-aggregation-builder#1.0.9",
-    "json-combine": "DigElements/json-combine#1.0.1",
-    "query-builder": "DigElements/query-builder#1.0.1",
-    "query-transformer": "DigElements/query-transformer#1.0.11",
+    "elastic-client-search": "DigElements/elastic-client-search#2.0.1",
+    "elastic-client-aggregation-builder": "DigElements/elastic-client-aggregation-builder#2.0.1",
+    "json-combine": "DigElements/json-combine#2.0.0",
+    "query-builder": "DigElements/query-builder#2.0.0",
+    "query-transformer": "DigElements/query-transformer#2.0.0",
     "lodash-import": "DigElements/lodash-import#~1.0.1"
   },
   "devDependencies": {
-    "elastic-client": "DigElements/elastic-client#1.0.5",
-    "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
-    "web-component-tester": "^5.0.0"
+    "elastic-client": "DigElements/elastic-client#2.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
+    "web-component-tester": "^6.0.0"
   },
   "resolutions": {
     "lodash": "~4.17.2"
