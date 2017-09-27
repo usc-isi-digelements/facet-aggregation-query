@@ -93,9 +93,9 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
 
     <template is="dom-if" if="[[client]]">
       <query-builder
-        callback="[[_queryBuilderCallback]]"
         config="[[queryBuilderConfig]]"
         data="[[searchParameters]]"
+        date-fields="[[dateFields]]"
         query="{{_query}}"
         match-all="[[matchAll]]">
       </query-builder>
@@ -143,6 +143,17 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
       ],
 
       properties: {
+        /**
+         * (Required)
+         *
+         * Date fields to pass to `query-builder`.
+         *
+         * @type {Object}
+         */
+        dateFields: {
+          type: Object
+        },
+
         /**
          * (Required)
          *
@@ -392,51 +403,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
          */
         _aggregation: {
           type: Object
-        },
-
-        /**
-         * An object collection of callback functions to get query terms from search objects of specific types.
-         *
-         * @type {Object}
-         * @private
-         * @default {dates: getFilterDates, terms: getFilterTerms}
-         */
-        _queryBuilderCallback: {
-          type: Object,
-          value: function() {
-            return {
-              dates: this.getFilterDates,
-              terms: this.getFilterTerms
-            };
-          }
         }
-      },
-
-      /**
-       * Returns the two-element array of start and end dates from the given date filter object.
-       * If a start or end date is not set or enabled the array will have null at that index.
-       *
-       * @param {Object} object
-       * @return {Array}
-       */
-      getFilterDates: function(object) {
-        var start = object.dateStart && object.dateStart.enabled ? object.dateStart.date : null;
-        var end = object.dateEnd && object.dateEnd.enabled ? object.dateEnd.date : null;
-        return [start, end];
-      },
-
-      /**
-       * Returns the array of enabled query terms from the given filter object.
-       *
-       * @param {Object} object
-       * @return {Array}
-       */
-      getFilterTerms: function(object) {
-        return _.keys(object).filter(function(key) {
-          return object[key].enabled;
-        }).map(function(key) {
-          return key;
-        });
       }
     });
   })();

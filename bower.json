@@ -1,7 +1,7 @@
 {
   "name": "facet-aggregation-query",
   "description": "A Polymer Element that performs an ajax query or elasticsearch aggregation query and returns results in a format ready to use as a set of facets.",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -21,7 +21,7 @@
     "elastic-client-search": "DigElements/elastic-client-search#2.0.1",
     "elastic-client-aggregation-builder": "DigElements/elastic-client-aggregation-builder#2.0.1",
     "json-combine": "DigElements/json-combine#2.1.1",
-    "query-builder": "DigElements/query-builder#2.0.0",
+    "query-builder": "DigElements/query-builder#2.0.1",
     "query-transformer": "DigElements/query-transformer#2.1.0",
     "lodash-import": "DigElements/lodash-import#~1.0.1"
   },
