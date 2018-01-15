@@ -54,6 +54,10 @@ limitations under the License.
         test('properties with default values are specified correctly', function() {
           assert.isFalse(element.matchAll);
         });
+
+        test('does have _buildArray function', function() {
+          expect(element._buildArray).to.be.a('Function');
+        });
       });
 
       suite('facet-aggregation-query transformer tests', function() {

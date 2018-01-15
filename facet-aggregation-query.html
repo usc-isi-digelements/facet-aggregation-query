@@ -15,7 +15,6 @@ limitations under the License.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../array-behavior/array-behavior.html">
 <link rel="import" href="../elastic-client-search/elastic-client-search.html">
 <link rel="import" href="../elastic-client-aggregation-builder/elastic-client-aggregation-builder.html">
 <link rel="import" href="../json-combine/json-combine.html">
@@ -108,8 +107,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         page-size="0"
         results="{{_queryResults}}"
         last-error="{{error}}"
-        aggregations="{{buildArray(_aggregation)}}"
-        filters="[]"
+        aggregations="{{_buildArray(_aggregation)}}"
         loading="{{loading}}"
         properties-ready="{{processRequest}}">
       </elastic-client-search>
@@ -132,15 +130,12 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
     </template>
   </template>
   <script>
+
   (function() {
     'use strict';
 
     Polymer({
       is: 'facet-aggregation-query',
-
-      behaviors: [
-        DigBehaviors.ArrayBehavior
-      ],
 
       properties: {
         /**
@@ -404,6 +399,16 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         _aggregation: {
           type: Object
         }
+      },
+
+      /**
+       * Returns an array with the given aggregation object.
+       *
+       * @param {Object} aggregation
+       * @return {Array}
+       */
+      _buildArray: function(aggregation) {
+        return [aggregation];
       }
     });
   })();
