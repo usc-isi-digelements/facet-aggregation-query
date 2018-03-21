@@ -92,9 +92,11 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
 
     <template is="dom-if" if="[[client]]">
       <query-builder
+        type="contains"
         config="[[queryBuilderConfig]]"
         data="[[searchParameters]]"
         date-fields="[[dateFields]]"
+        stop="[[!processRequest]]"
         query="{{_query}}"
         match-all="[[matchAll]]">
       </query-builder>
@@ -116,6 +118,7 @@ A Polymer Element that performs an ajax query or elasticsearch aggregation query
         name="[[name]]"
         field="[[field]]"
         count="{{count}}"
+        filters="[]"
         ejs-aggregation="{{_aggregation}}"
         type="terms"
         order="{{sortOrder}}">
